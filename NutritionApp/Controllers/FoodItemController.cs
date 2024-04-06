@@ -7,15 +7,16 @@ namespace NutritionApp.Controllers
     public class FoodItemController : Controller
     {
         private DatabaseContext databaseContext;
-        public FoodItemController(DatabaseContext databaseContext)
+        private HttpClient client;
+        public FoodItemController(DatabaseContext databaseContext, HttpClient client)
         {
             this.databaseContext = databaseContext;
+            this.client = client;
         }
         public async Task<ActionResult> Index()
         {
             string url = "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&query=Cheddar%20Cheese";
-            HttpClient client = new HttpClient();
-            var response = await client.GetAsync(url);
+            HttpResponseMessage response = await client.GetAsync(url);
             string json = await response.Content.ReadAsStringAsync();
 
             List<FoodItem> FoodItemList = databaseContext.FoodItems.ToList();

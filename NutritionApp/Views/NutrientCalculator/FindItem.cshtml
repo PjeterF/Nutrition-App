@@ -1,0 +1,62 @@
+﻿@model List<Food>
+
+    <style>
+        .hightlight-row:hover
+        {
+            bg-danger
+        }
+    </style>
+
+<form method="post" asp-controller="NutrientCalculator" asp-action="FindItem">
+    <h1>Food search</h1>
+    <label class="form-label">Food Name</label>
+    <input class="form-control mb-2" type="text" name="foodName"/>
+    <button class="form-control btn btn-dark mb-3" type="submit">Search</button>
+
+@*    <select multiple class="form-select">
+        @for(int i=0;i<Model.Count;i++)
+        {
+            <option class="list-group-item list-group-item-light list-group-item-action">@(Model[i].Name + " " + Model[i].BrandName)</option>
+        }
+    </select>*@
+
+    <ul class="list-group">
+        @for(int i=0;i<Model.Count;i++)
+        {
+            if(i%2==0)
+            {
+                <a class="list-group-item list-group-item-light list-group-item-action">@(Model[i].Name + " " + Model[i].BrandName)</a>
+            }
+            else
+            {
+                <a class="list-group-item list-group-item-dark list-group-item-action">@(Model[i].Name + " " + Model[i].BrandName)</a>
+                
+            }
+        }
+    </ul>
+
+    <table class="table border border-dark border-5">
+        <thead class="bg-danger text-black fw-bold">
+            <tr>
+                <td>Name</td>
+                <td>BrandName</td>
+                <td>ServingSize</td>
+                <td>ServingSizeUnit</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr class="hightlight-row">
+                    <td>@(item.Name)</td>
+                    <td>@item.BrandName</td>
+                    <td>@item.ServingSize</td>
+                    <td>@item.ServingSizeUnit</td>
+                </tr>
+            }
+        </tbody>
+        
+    </table>
+
+</form>
+
