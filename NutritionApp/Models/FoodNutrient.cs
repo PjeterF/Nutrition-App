@@ -15,8 +15,30 @@ namespace NutritionApp.Models
 
             this.NutrientId = (int)jobj["nutrientId"];
             this.Name = (string)jobj["nutrientName"];
-            this.UnitName = (string)jobj["unitName"];
-            this.Value = (int)jobj["value"];
+
+            switch((string)jobj["unitName"])
+            {
+                case "G":
+                    this.Value = (float)jobj["value"];
+                    this.UnitName = "G";
+                    break;
+                case "MG":
+                    this.Value = (float)jobj["value"]*0.001f;
+                    this.UnitName = "G";
+                    break;
+                case "UG":
+                    this.Value = (float)jobj["value"] * 0.000001f;
+                    this.UnitName = "G";
+                    break;
+                case "KCAL":
+                    this.Value = (float)jobj["value"];
+                    this.UnitName = "KCAL";
+                    break;
+                case "IU":
+                    this.Value = (float)jobj["value"];
+                    this.UnitName = "IU";
+                    break;
+            }
         }
         [JsonProperty("nutrientId")]
         public int NutrientId { get; set; }
@@ -25,6 +47,6 @@ namespace NutritionApp.Models
         [JsonProperty("unitName")]
         public string UnitName { get; set; }
         [JsonProperty("value")]
-        public int Value { get; set; }
+        public float Value { get; set; }
     }
 }
