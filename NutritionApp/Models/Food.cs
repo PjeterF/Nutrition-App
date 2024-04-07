@@ -14,7 +14,7 @@ namespace NutritionApp.Models
             else
                 this.Name = "Null";
 
-            if (jFood["servingSize"] != null)
+            if (jFood["brandName"] != null)
                 this.BrandName = (string)jFood["brandName"];
             else
                 this.BrandName = "Null";

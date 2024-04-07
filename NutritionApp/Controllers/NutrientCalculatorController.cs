@@ -11,18 +11,21 @@ namespace NutritionApp.Controllers
     {
         DatabaseContext databaseContext;
         HttpClient httpClient;
-        public NutrientCalculatorController(DatabaseContext databaseContext, HttpClient client)
+        FindItemDataStorage findItemDataStorage;
+        public NutrientCalculatorController(DatabaseContext databaseContext, HttpClient client, FindItemDataStorage findItemData)
         {
             this.databaseContext = databaseContext;
             this.httpClient = client;
+            this.findItemDataStorage = findItemData;
         }
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult FindItem(List<Food>? foodList)
+        public IActionResult FindItem(int index = -1)
         {
-            return View(foodList);
+            findItemDataStorage.selectedIndex = index;
+            return View(new FindItemData(findItemDataStorage.selectedIndex, findItemDataStorage.foodList));
         }
         [HttpPost]
         public async Task<ActionResult> FindItem(string foodName)
@@ -32,16 +35,19 @@ namespace NutritionApp.Controllers
             string json = await response.Content.ReadAsStringAsync();
 
             JObject jobj = JObject.Parse(json);
-            JArray foodList = (JArray)jobj["foods"];
+            JArray jList = (JArray)jobj["foods"];
 
-            List<Food> foods = new List<Food>();
-            foreach(var jFood in foodList)
+            findItemDataStorage.foodList.Clear();
+            foreach (var jFood in jList)
             {
-                string foodStr = jFood.ToString();
-                foods.Add(new Food(foodStr));
+                Food newFood = new Food(jFood.ToString());
+
+                if(newFood.BrandName=="Null")
+                    findItemDataStorage.foodList.Add(newFood);
             }
 
-            return View(foods);
+            findItemDataStorage.selectedIndex = -1;
+            return View(new FindItemData(findItemDataStorage.selectedIndex, findItemDataStorage.foodList));
         }
     }
 }
