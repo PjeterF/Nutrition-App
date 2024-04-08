@@ -1,0 +1,46 @@
+﻿<style>
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        transform: translate(-50%, -50%);
+    }
+    body {
+        background: linear-gradient(to bottom, #CC0033, #3300CC);
+    }
+
+</style>
+
+<script>
+    function setDemoValues()
+    {
+        document.getElementById("EmailInput").value = "DEMO@demo.com";
+        document.getElementById("PasswordInput").value = "DEMO";
+    }
+</script>
+
+<body>
+    <div class="container-fluid border border-5 border-danger bg bg-dark">
+        
+        <div class="d-flex justify-content-center mt-2">
+            <h1 class="text-white">Login</h1>
+        </div>
+        <div>
+            <form class="m-3" asp-controller="Auth" asp-action="Login">
+                <input name="email" class="form-control mb-3" type="text" id="EmailInput" placeholder="Email" />
+                <input name="password" class="form-control mb-3" type="password" id="PasswordInput" placeholder="Password" />
+                <div class="d-flex justify-content-between">
+                    <input class="btn btn-primary" type="submit" value="Login" />
+                    <input onclick="setDemoValues()" class="btn btn-danger" type="submit" id="DEMO_button" value="DEMO User" />
+                </div>
+                
+            </form>
+            <p class="text-white m-3">Don't have an account yet? <a asp-controller="Auth" asp-action="Register" class="text-danger">Sign Up</a></p>
+        </div>
+    </div>
+    <div class="row">
+</div>  
+</body>
+
+

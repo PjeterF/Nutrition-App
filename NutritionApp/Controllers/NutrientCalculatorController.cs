@@ -20,6 +20,7 @@ namespace NutritionApp.Controllers
         }
         public IActionResult Index()
         {
+            var currUser = HttpContext.Session.GetString("currentUser");
             return View();
         }
         public IActionResult FindItem(int index = -1)

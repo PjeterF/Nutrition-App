@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using NutritionApp.Models;
 
 namespace NutritionApp.Data
@@ -17,8 +18,12 @@ namespace NutritionApp.Data
                 new FoodItem { Id = 2, Name = "Beluga Lentils 100g", Calories = 357 },
                 new FoodItem { Id = 3, Name = "Soybeans 100g", Calories = 412 }
                 );
+            modelBuilder.Entity<Account>().HasData(
+                new Account { Email = "DEMO@demo.com", Username = "DEMO_User", Password = "DEMO" }
+                );
         }
 
         public DbSet<FoodItem> FoodItems { get; set; }
+        public DbSet<Account> Accounts { get; set; }
     }
 }

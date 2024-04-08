@@ -1,0 +1,37 @@
+﻿<style>
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        transform: translate(-50%, -50%);
+    }
+    body {
+        background: linear-gradient(to bottom, #CC0033, #3300CC);
+    }
+
+</style>
+<body>
+    <div class="container-fluid border border-5 border-danger bg bg-dark">
+
+        <div class="d-flex justify-content-center mt-2">
+            <h1 class="text-white">Register</h1>
+        </div>
+        <div>
+            <form class="m-3" asp-controller="Auth" asp-action="Register">
+                <input class="form-control mb-3" type="text" placeholder="Username" />
+                <input class="form-control mb-3" type="email" placeholder="E-mail address" />
+                <input class="form-control mb-3" type="password" placeholder="Password" />
+                <input class="form-control mb-3" type="password" placeholder="Re-enter password" />
+                <div class="d-flex justify-content-between">
+                    <input class="btn btn-primary" type="submit" value="Register" />
+                </div>
+            </form>
+            <p class="text-white m-3">Already have an account? <a asp-controller="Auth" asp-action="Login" class="text-danger">Sign in</a></p>
+        </div>
+    </div>
+    <div class="row">
+</div>  
+</body>
+
+
