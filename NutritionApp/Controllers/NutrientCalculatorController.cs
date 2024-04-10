@@ -23,6 +23,19 @@ namespace NutritionApp.Controllers
             var currUser = HttpContext.Session.GetString("currentUser");
             return View();
         }
+        [HttpPost]
+        public async Task<ActionResult> Index(int foodId)
+        {
+            string key = "PDhtf6KxCYiAEcqI7HZeO8Nb5Eg9FajCV3d6d21J";
+            string url = "https://api.nal.usda.gov/fdc/v1/food/" + foodId + "?api_key=" + key;
+            HttpResponseMessage response = await httpClient.GetAsync(url);
+            string json = await response.Content.ReadAsStringAsync();
+
+            Food food = new Food(json);
+
+            var currUser = HttpContext.Session.GetString("currentUser");
+            return View();
+        }
         public IActionResult FindItem(int index = -1)
         {
             findItemDataStorage.selectedIndex = index;
@@ -43,7 +56,7 @@ namespace NutritionApp.Controllers
             {
                 Food newFood = new Food(jFood.ToString());
 
-                if(newFood.BrandName=="Null")
+                if(newFood.DataType!="Branded")
                     findItemDataStorage.foodList.Add(newFood);
             }
 

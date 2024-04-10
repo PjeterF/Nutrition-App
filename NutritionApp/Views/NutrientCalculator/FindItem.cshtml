@@ -29,6 +29,7 @@
             @{
                 float absCarb = 0, absProtein = 0, absFat = 0;
                 float carb = 0, protein = 0, fat = 0;
+                float KCAL = 0;
 
                 if(Model.selectedIndex!=-1)
                 {
@@ -45,6 +46,10 @@
                     if (nutrient != null)
                         absCarb = nutrient.Value;
 
+                    nutrient = Model.foodList[Model.selectedIndex].Nutrients.Find(x => x.NutrientId == 1008);
+                    if (nutrient != null)
+                        KCAL = nutrient.Value;
+
                     carb = (float)absCarb;
                     protein = (float)absProtein;
                     fat = (float)absFat;
@@ -59,23 +64,33 @@
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" style="width: @((int)Math.Ceiling(protein))%"></div>
                     <div class="progress-bar bg-warning" role="progressbar" style="width: @((int)Math.Ceiling(fat))%"></div>
-                        <div class="progress-bar bg-success" role="progressbar" style="width: @((int)Math.Ceiling(carb))%"></div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @((int)Math.Ceiling(carb))%"></div>
                 </div>
                 <div class="row">
-                    <i class="bi bi-circle-fill" style="color:#dc3545"> <label class="text-black">Protein @(absProtein)g</label></i>
+                    <i class="bi bi-circle-fill" style="color:#dc3545"> <label class="text-black">Protein @(absProtein) g</label></i>
                 </div>
                 <div class="row">
-                    <i class="bi bi-circle-fill" style="color:#ffc107"> <label class="text-black">Fat @(absFat)</label></i>
+                    <i class="bi bi-circle-fill" style="color:#ffc107"> <label class="text-black">Fat @(absFat) g</label></i>
                 </div>
                 <div class="row">
-                    <i class="bi bi-circle-fill" style="color:#198754"> <label class="text-black">Carbohydrates @(absCarb)g</label></i>
+                    <i class="bi bi-circle-fill" style="color:#198754"> <label class="text-black">Carbohydrates @(absCarb) g</label></i>
+                </div>
+                <div class="row">
+                    <i class="bi bi-circle-fill" style="color:#332D2D"> <label class="text-black">Calories @(KCAL) kcal</label></i>
                 </div>
             }
         </div>
     </div>
-    <form method="post" asp-controller="NutrientCalculator" asp-action="Index">
-        <button class="mt-1 form-control btn btn-primary mb-3" type="submit">Add selected item to collection</button>
-    </form>
+    @if(Model.selectedIndex==-1)
+    {
+        <button class="mt-1 form-control btn btn-primary mb-3" type="submit" disabled>Add selected item to collection</button>
+    }
+    else
+    {
+        <form method="post" asp-controller="NutrientCalculator" asp-action="Index" asp-route-foodId=@Model.foodList[Model.selectedIndex].FdcId>
+            <button class="mt-1 form-control btn btn-primary mb-3" type="submit">Add selected item to collection</button>
+        </form>
+    }
     <div class="row mt-3">
         <div class="list-group">
             @for (int i = 0; i < Model.foodList.Count; i++)

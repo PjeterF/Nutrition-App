@@ -18,19 +18,23 @@ namespace NutritionApp.Controllers
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
-            if(email==null || password==null)
+            ViewBag.error = "Incorrect credentials";
+            if (email==null || password==null)
             {
-                return RedirectToAction("Login", "Auth");
+                ViewBag.error = "Incorrect credentials!";
+                return View();
             }
 
-            Account acc= databaseContext.Accounts.Find(email);
+            Account acc= databaseContext.Accounts.Where(e=>e.Email==email).First();
             if(acc==null)
             {
-                return RedirectToAction("Login", "Auth");
+                ViewBag.error = "Incorrect credentials!";
+                return View();
             }
             
             if(acc.Password!=password)
             {
+                ViewBag.error = "Incorrect credentials";
                 return RedirectToAction("Login", "Auth");
             }
 
@@ -39,7 +43,37 @@ namespace NutritionApp.Controllers
         }
         public IActionResult Register()
         {
-            return View();
+            string message = ViewBag.error;
+            return View(message);
+        }
+        [HttpPost]
+        public IActionResult Register(string username, string email, string password, string password2)
+        {
+            Account acc;
+            acc = databaseContext.Accounts.Where(e => e.Email == email).First();
+            if (acc!=null)
+            {
+                ViewBag.error = "Account with this email address already exists!";
+                return View();
+            }
+
+            acc = databaseContext.Accounts.Where(n => n.Username == username).FirstOrDefault();
+            if(acc!=null)
+            {
+                ViewBag.error = "Account with this username already exists!";
+                return View();
+            }
+
+            if(password!=password2)
+            {
+                ViewBag.error = "Password do not match";
+                return View();
+            }
+
+            databaseContext.Add(new Account { Username = username, Email = email, Password = password });
+            databaseContext.SaveChanges();
+
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

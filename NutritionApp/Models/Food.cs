@@ -31,6 +31,11 @@ namespace NutritionApp.Models
             else
                 this.ServingSizeUnit = "Null";
 
+            if (jFood["dataType"] != null)
+                this.DataType = (string)jFood["dataType"];
+            else
+                this.DataType = "Null";
+
             this.Nutrients = new List<FoodNutrient>();
 
             foreach(var jNutrient in jFood["foodNutrients"])
@@ -46,5 +51,6 @@ namespace NutritionApp.Models
         public int ServingSize { get; set; }
         public string ServingSizeUnit { get; set; }
         public List<FoodNutrient> Nutrients { get; set;}
+        public string DataType { get; set; }
     }
 }
