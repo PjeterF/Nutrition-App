@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="Models\FoodCollection\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

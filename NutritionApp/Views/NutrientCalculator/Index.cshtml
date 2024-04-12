@@ -1,24 +1,19 @@
-﻿
+﻿@model List<Food>
+
 <div class="border border-5 border-secondary rounded-3">
     <a class="btn btn-secondary" asp-controller="NutrientCalculator" asp-action="FindItem">Find food item</a>
     <br />
     <table class="table">
         <thead>
             <tr>
-                <th>Test0</th>
-                <th>Test1</th>
-                <th>Test2</th>
-                <th>Test3</th>
+                <th>Name</th>
             </tr>
         </thead>
         <tbody>
-            @for(int i=0;i<5;i++)
+            @for(int i=0;i<Model.Count;i++)
             {
                 <tr>
-                     <td>@i</td>
-                     <td>@(i*i)</td>
-                     <td>@(i*i*i)</td>
-                     <td>@(i*i*i*i)</td>
+                     <td>@Model[i].Name</td>
                 </tr>
             }
         </tbody>

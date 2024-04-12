@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NutritionApp.Data;
@@ -18,10 +19,37 @@ namespace NutritionApp.Controllers
             this.httpClient = client;
             this.findItemDataStorage = findItemData;
         }
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var currUser = HttpContext.Session.GetString("currentUser");
-            return View();
+            int curSetId = Int32.Parse(HttpContext.Session.GetString("FoodSetId"));
+
+            var foodSet = databaseContext.FoodSets
+                .Where(x => x.Id == curSetId)
+                .Include(fs => fs.FoodItems)
+                .FirstOrDefault();
+
+            string key = "PDhtf6KxCYiAEcqI7HZeO8Nb5Eg9FajCV3d6d21J";
+            string url = "https://api.nal.usda.gov/fdc/v1/foods?fdcIds=";
+
+            for(int i=0;i<foodSet.FoodItems.Count;i++)
+            {
+                url = url + foodSet.FoodItems[i].USDA_ID;
+                if (i < foodSet.FoodItems.Count - 1)
+                    url = url + ",";
+            }
+            url = url+ "&api_key=" + key;
+            HttpResponseMessage response = await httpClient.GetAsync(url);
+            string json = await response.Content.ReadAsStringAsync();
+            JArray jArray = JArray.Parse(json);
+
+            List<Food> list = new List<Food>();
+            foreach(var jItem in jArray)
+            {
+                list.Add(new Food(jItem.ToString()));
+            }
+
+            return View(list);
         }
         [HttpPost]
         public async Task<ActionResult> Index(int foodId)
@@ -40,6 +68,29 @@ namespace NutritionApp.Controllers
         {
             findItemDataStorage.selectedIndex = index;
             return View(new FindItemData(findItemDataStorage.selectedIndex, findItemDataStorage.foodList));
+        }
+        [HttpPost("FindItem/{foodItemId}/{foodSetId}")]
+        public IActionResult FindItem(int foodItemId, int foodSetId)
+        {
+            FoodItem foodItem = databaseContext.FoodItems.Where(x => x.USDA_ID == foodItemId).FirstOrDefault();
+            if(foodItem == null)
+            {
+                foodItem = new FoodItem() { USDA_ID = foodItemId };
+                databaseContext.FoodItems.Add(foodItem);
+            }
+
+            FoodSet foodSet = databaseContext.FoodSets.Find(foodSetId);
+            if (foodSet == null)
+            {
+                foodSet = new FoodSet();
+                databaseContext.FoodSets.Add(foodSet);
+            }
+
+            databaseContext.SaveChanges();
+            databaseContext.FoodItemSet_JOIN.Add(new FoodItemSet() { FoodItemId=foodItem.Id, FoodSetId=foodSetId });
+            databaseContext.SaveChanges();
+
+            return RedirectToAction("Index", "NutrientCalculator");
         }
         [HttpPost]
         public async Task<ActionResult> FindItem(string foodName)

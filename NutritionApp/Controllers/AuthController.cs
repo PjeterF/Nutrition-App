@@ -13,6 +13,7 @@ namespace NutritionApp.Controllers
         }
         public IActionResult Login()
         {
+            HttpContext.Session.SetString("FoodSetId", "1");
             return View();
         }
         [HttpPost]
