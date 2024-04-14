@@ -39,12 +39,12 @@
                         <td>
                             <form id="@i" method="post" asp-controller="NutrientCalculator" asp-action="UpdateQuantity">
                                 <input name="newQuantity" type="number" value=@Model.Quantities[i] onblur='submitChange("@i")'>
-                                <input name="USDA_ID" type="number" value=@Model.Foods[i].FdcId hidden>
+                                <input name="USDA_ID" type="number" value=@Model.Foods[i].USDA_ID hidden>
                             </form>
 
                         </td>
                         <td class="d-flex flex-row-reverse">
-                            <a asp-controller="NutrientCalculator" asp-action="Delete" asp-route-USDA_ID=@Model.Foods[i].FdcId class="btn btn-danger">Delete</a>
+                            <a asp-controller="NutrientCalculator" asp-action="Delete" asp-route-USDA_ID=@Model.Foods[i].USDA_ID class="btn btn-danger">Delete</a>
                             <a class="btn btn-dark">Edit</a>
                         </td>
                     </tr>

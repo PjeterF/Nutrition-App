@@ -87,7 +87,7 @@
     }
     else
     {
-        <form method="post" asp-controller="NutrientCalculator" asp-action="FindItem" asp-route-foodItemId=@Model.foodList[Model.selectedIndex].FdcId asp-route-foodSetId=@Int32.Parse(ViewBag.FoodSetId))>
+        <form method="post" asp-controller="NutrientCalculator" asp-action="FindItem" asp-route-foodItemId=@Model.foodList[Model.selectedIndex].USDA_ID asp-route-foodSetId=@ViewBag.FoodSetId>
             <button class="mt-1 form-control btn btn-primary mb-3" type="submit">Add selected item to collection</button>
         </form>
     }

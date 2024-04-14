@@ -81,8 +81,10 @@ namespace NutritionApp.Controllers
             return View(new FindItemData(findItemDataStorage.selectedIndex, findItemDataStorage.foodList));
         }
         [HttpPost("FindItem/{foodItemId}/{foodSetId}")]
-        public IActionResult FindItem(int foodItemId, int foodSetId)
+        public IActionResult FindItem(int foodItemId, string foodSetId)
         {
+            int fSetId= int.Parse(foodSetId);
+
             FoodItem foodItem = databaseContext.FoodItems.Where(x => x.USDA_ID == foodItemId).FirstOrDefault();
             if(foodItem == null)
             {
@@ -90,7 +92,7 @@ namespace NutritionApp.Controllers
                 databaseContext.FoodItems.Add(foodItem);
             }
 
-            FoodSet foodSet = databaseContext.FoodSets.Find(foodSetId);
+            FoodSet foodSet = databaseContext.FoodSets.Find(fSetId);
             if (foodSet == null)
             {
                 foodSet = new FoodSet();
@@ -98,7 +100,7 @@ namespace NutritionApp.Controllers
             }
 
             databaseContext.SaveChanges();
-            databaseContext.FoodItemSet_JOIN.Add(new FoodItemSet() { FoodItemId=foodItem.Id, FoodSetId=foodSetId, Quantity=1 });
+            databaseContext.FoodItemSet_JOIN.Add(new FoodItemSet() { FoodItemId=foodItem.Id, FoodSetId= foodSet.Id, Quantity=1 });
             databaseContext.SaveChanges();
 
             return RedirectToAction("Index", "NutrientCalculator");

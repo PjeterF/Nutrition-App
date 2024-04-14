@@ -25,7 +25,7 @@ namespace NutritionApp.Controllers
                 return View();
             }
 
-            Account acc= databaseContext.Accounts.Where(e=>e.Email==email).First();
+            Account acc= databaseContext.Accounts.Where(e=>e.Email==email).FirstOrDefault();
             if(acc==null)
             {
                 ViewBag.error = "Incorrect credentials!";

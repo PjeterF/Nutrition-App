@@ -9,7 +9,7 @@ namespace NutritionApp.Models
         {
             JObject jFood= JObject.Parse(jsonFood);
 
-            this.FdcId = (int)jFood["fdcId"];
+            this.USDA_ID = (int)jFood["fdcId"];
 
             if (jFood["description"] != null)
                 this.Name = (string)jFood["description"];
@@ -45,7 +45,7 @@ namespace NutritionApp.Models
                 this.Nutrients.Add(foodNutrient);
             }
         }
-        public int FdcId { get; set; }
+        public int USDA_ID { get; set; }
         public string Name { get; set; }
         public string BrandName { get; set; }
         public int ServingSize { get; set; }
