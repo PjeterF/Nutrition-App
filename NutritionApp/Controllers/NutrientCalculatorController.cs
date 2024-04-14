@@ -46,7 +46,7 @@ namespace NutritionApp.Controllers
             List<Food> list = new List<Food>();
             foreach(var jItem in jArray)
             {
-                list.Add(new Food(jItem.ToString()));
+                list.Add(new Food(jItem.ToString(), "foods"));
             }
 
             return View(list);
@@ -95,7 +95,7 @@ namespace NutritionApp.Controllers
         [HttpPost]
         public async Task<ActionResult> FindItem(string foodName)
         {
-            string url = "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=PDhtf6KxCYiAEcqI7HZeO8Nb5Eg9FajCV3d6d21J&query=" + foodName;
+            string url = "https://api.nal.usda.gov/fdc/v1/foods/search?dataType=Foundation&api_key=PDhtf6KxCYiAEcqI7HZeO8Nb5Eg9FajCV3d6d21J&query=" + foodName;
             HttpResponseMessage response = await httpClient.GetAsync(url);
             string json = await response.Content.ReadAsStringAsync();
 

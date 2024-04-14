@@ -1,0 +1,56 @@
+﻿@model NutrientListData
+
+<h3 class="mt-3">@Model.Name</h3>
+<table class="table table-striped border border-2 border-secondary">
+    <thead class="bg-warning">
+        <tr>
+            <td class="fw-bold">Name</td>
+            <td class="fw-bold">Value</td>
+            <td class="fw-bold">Unit</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                @{
+                    string unitname = "-";
+                    bool unitnameFound = false;
+
+                    float value = 0;
+                    foreach (var food in Model.Foods)
+                    {
+                        FoodNutrient nutrient = food.Nutrients.Find(x => x.NutrientId == item.NutrientId);
+                        if (nutrient != null)
+                        {
+                            value = value + nutrient.Value;
+                            if (!unitnameFound)
+                            {
+                                unitname = nutrient.OGUnitName;
+                                unitnameFound = true;
+                            }
+                        }
+                    }
+
+                    float scale;
+                    switch (unitname)
+                    {
+                        case "mg":
+                            scale = 1000.0f;
+                            break;
+                        case "µg":
+                            scale = 1000000.0f;
+                            break;
+                        default:
+                            scale = 1.0f;
+                            break;
+                    }
+
+                    <td>@(value * scale)</td>
+                    <td>@unitname</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

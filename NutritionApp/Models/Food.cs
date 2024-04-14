@@ -5,7 +5,7 @@ namespace NutritionApp.Models
 {
     public class Food
     {
-        public Food(string jsonFood)
+        public Food(string jsonFood, string endpoint="search")
         {
             JObject jFood= JObject.Parse(jsonFood);
 
@@ -41,7 +41,7 @@ namespace NutritionApp.Models
             foreach(var jNutrient in jFood["foodNutrients"])
             {
                 JObject jObjNutrient = jNutrient.ToObject<JObject>();
-                FoodNutrient foodNutrient = jObjNutrient.ToObject<FoodNutrient>();
+                FoodNutrient foodNutrient = new FoodNutrient(jObjNutrient.ToString(), endpoint);
                 this.Nutrients.Add(foodNutrient);
             }
         }
