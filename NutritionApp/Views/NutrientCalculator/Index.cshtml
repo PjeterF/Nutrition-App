@@ -1,41 +1,82 @@
-﻿@model List<Food>
+﻿@model NutrientCalculatorData
 
-<div class="border border-5 border-secondary rounded-3">
-    <a class="btn btn-secondary" asp-controller="NutrientCalculator" asp-action="FindItem">Find food item</a>
-    <br />
-    <table class="table">
-        <thead>
+<style>
+    body {
+        background: linear-gradient(to bottom, #ECECEC, #66555F);
+    }
+</style>
+
+<script>
+    function submitChange(id){
+        var form = document.getElementById(id);
+        form.submit();
+    }
+</script>
+
+<body>
+<div class="container-fluid bg-light border border-3 rounded-3 mb-3">
+    <div class="d-flex justify-content-between">
+         <a class="btn btn-dark m-3" asp-controller="NutrientCalculator" asp-action="FindItem">Find food item</a>
+         <a class="btn btn-success m-3" asp-controller="Auth" asp-action="Logout">Log out</a>
+    </div>
+</div>
+
+<div class="container-fluid bg-light border border-3 rounded-3 mb-3">
+    <h3>Collection</h3>
+    <table class="table border border-2 border-secondary mb-4">
+        <thead class="bg-danger">
             <tr>
-                <th>Name</th>
+                <td class="fw-bold">Name</td>
+                <td class="fw-bold">Quantity</td>
+                <td class="fw-bold"></td>
             </tr>
         </thead>
-        <tbody>
-            @for(int i=0;i<Model.Count;i++)
-            {
-                <tr>
-                     <td>@Model[i].Name</td>
-                </tr>
-            }
+        <tbody class="bg-white">
+                @for (int i = 0; i < Model.Foods.Count; i++)
+                {
+                    <tr>
+                        <td>@Model.Foods[i].Name</td>
+                        <td>
+                            <form id="@i" method="post" asp-controller="NutrientCalculator" asp-action="UpdateQuantity">
+                                <input name="newQuantity" type="number" value=@Model.Quantities[i] onblur='submitChange("@i")'>
+                                <input name="USDA_ID" type="number" value=@Model.Foods[i].FdcId hidden>
+                            </form>
+
+                        </td>
+                        <td class="d-flex flex-row-reverse">
+                            <a asp-controller="NutrientCalculator" asp-action="Delete" asp-route-USDA_ID=@Model.Foods[i].FdcId class="btn btn-danger">Delete</a>
+                            <a class="btn btn-dark">Edit</a>
+                        </td>
+                    </tr>
+                }
         </tbody>
     </table>
 </div>
 
-@*@await Html.PartialAsync("_NutrientList", new NutrientListData()
-{
-    Name="Vitamines",
-    Nutrients=Model[0].Nutrients,
-    NutrientIdsToInclude = new List<int>() { 1104, 1162, 1114, 1175, 1242, 1185, 1175, 1166, 1177, 1167, 1180 }    
-});*@
-
-
-<div class="row">
-    <div class="col">
-        @await Html.PartialAsync("_NutrientList", new NutrientListData()
-{
-        Name="Vitamines",
-        Foods=Model,
-        Items = new List<NutrientListItem>()
-        {
+<div class="container-fluid bg-light border border-3 rounded-3 mb-3">
+    <div class="row">
+        <div class="col">
+                @await Html.PartialAsync("_NutrientList", new NutrientListData()
+            {
+            Name="General",
+            Foods=Model.Foods,
+            Quantities=Model.Quantities,
+            Items = new List<NutrientListItem>()
+            {
+            new NutrientListItem() { Name="Calories", NutrientId = 1008 },
+            new NutrientListItem() { Name="Alcohol, ethyl", NutrientId = 1018 },
+            new NutrientListItem() { Name="Caffeine", NutrientId = 1057 },
+            new NutrientListItem() { Name="Theobromine", NutrientId = 1058 },
+            new NutrientListItem() { Name="Water", NutrientId = 1051 }
+            }
+            })
+                @await Html.PartialAsync("_NutrientList", new NutrientListData()
+            {
+            Name="Vitamines",
+            Foods=Model.Foods,
+            Quantities=Model.Quantities,
+            Items = new List<NutrientListItem>()
+            {
             new NutrientListItem() { Name="Vitamin A", NutrientId = 1106 },
             new NutrientListItem() { Name="Vitamin C", NutrientId = 1162 },
             new NutrientListItem() { Name="Vitamin D", NutrientId = 1114 },
@@ -47,38 +88,53 @@
             new NutrientListItem() { Name="Folate", NutrientId = 1177 },
             new NutrientListItem() { Name="Niacin", NutrientId = 1167 },
             new NutrientListItem() { Name="Choline", NutrientId = 1180 }
-        }
-})
-    </div>
-    <div class="col">
-        @await Html.PartialAsync("_NutrientList", new NutrientListData()
-        {
+            }
+            })
+        </div>
+        <div class="col">
+                @await Html.PartialAsync("_NutrientList", new NutrientListData()
+            {
             Name="Macro-nutrients",
-            Foods=Model,
+            Foods=Model.Foods,
+            Quantities=Model.Quantities,
             Items = new List<NutrientListItem>()
             {
-                new NutrientListItem() { Name="Carbohydrates", NutrientId = 1005 },
-                new NutrientListItem() { Name="Total Fiber", NutrientId = 1079 },
-                new NutrientListItem() { Name="Protein", NutrientId = 1003 },
-                new NutrientListItem() { Name="Total fat", NutrientId = 1004 },
-                new NutrientListItem() { Name="Saturated fatty acids", NutrientId = 1258 },
-                new NutrientListItem() { Name="Trans fatty acids", NutrientId = 1257 },
-                new NutrientListItem() { Name="Cholesterol", NutrientId = 1253 },
+            new NutrientListItem() { Name="Carbohydrates", NutrientId = 1005 },
+            new NutrientListItem() { Name=" Total Fiber", NutrientId = 1079 },
+            new NutrientListItem() { Name="Protein", NutrientId = 1003 },
+            new NutrientListItem() { Name=" Total fat", NutrientId = 1004 },
+            new NutrientListItem() { Name=" Saturated fatty acids", NutrientId = 1258 },
+            new NutrientListItem() { Name=" Trans fatty acids", NutrientId = 1257 },
+            new NutrientListItem() { Name="Cholesterol", NutrientId = 1253 }
             }
-        })
+            })
+                @await Html.PartialAsync("_NutrientList", new NutrientListData()
+            {
+            Name="Essential minerals",
+            Foods=Model.Foods,
+            Quantities=Model.Quantities,
+            Items = new List<NutrientListItem>()
+            {
+            new NutrientListItem() { Name="Calcium", NutrientId = 1087 },
+            new NutrientListItem() { Name="Chloride", NutrientId = 1088 },
+            new NutrientListItem() { Name="Chromium", NutrientId = 1096 },
+            new NutrientListItem() { Name="Copper", NutrientId = 1098 },
+            new NutrientListItem() { Name="Fluoride", NutrientId = 1099 },
+            new NutrientListItem() { Name="Iodine", NutrientId = 1100 },
+            new NutrientListItem() { Name="Iron", NutrientId = 1089 },
+            new NutrientListItem() { Name="Magnesium", NutrientId = 1090 },
+            new NutrientListItem() { Name="Manganese", NutrientId = 1101 },
+            new NutrientListItem() { Name="Molybdenum", NutrientId = 1102 },
+            new NutrientListItem() { Name="Phosphorus", NutrientId = 1091 },
+            new NutrientListItem() { Name="Potassium", NutrientId = 1092 },
+            new NutrientListItem() { Name="Selenium", NutrientId = 1103 },
+            new NutrientListItem() { Name="Sodium", NutrientId = 1093 },
+            new NutrientListItem() { Name="Zinc", NutrientId = 1095 }
+            }
+            })
+        </div>
     </div>
 </div>
 
-<ul class="list-group m-3">
-    <li class="list-group-item list-group-item-success">Vitamines</li>
-    <li class="list-group-item">
-        Vitamin A
-        <div class="progress">
-            <div class="progress-bar bg-danger" role="progressbar" style="width: 5%"></div>
-        </div>
-        </li>
-    <li class="list-group-item">Vitamin C</li>
-    <li class="list-group-item">Vitamin D</li>
-    <li class="list-group-item">Vitamin E</li>
-    <li class="list-group-item">Vitamin K</li>
-</ul>
+</body>
+

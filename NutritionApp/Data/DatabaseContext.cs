@@ -22,6 +22,10 @@ namespace NutritionApp.Data
                 .HasMany(x => x.FoodItems)
                 .WithMany(x => x.FoodSets)
                 .UsingEntity<FoodItemSet>();
+
+            modelBuilder.Entity<FoodItemSet>()
+                .Property(x => x.Quantity)
+                .HasColumnType("real");
         }
 
         public DbSet<Account> Accounts { get; set; }

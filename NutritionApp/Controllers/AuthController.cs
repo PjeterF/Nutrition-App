@@ -13,7 +13,6 @@ namespace NutritionApp.Controllers
         }
         public IActionResult Login()
         {
-            HttpContext.Session.SetString("FoodSetId", "1");
             return View();
         }
         [HttpPost]
@@ -40,6 +39,7 @@ namespace NutritionApp.Controllers
             }
 
             HttpContext.Session.SetString("currentUser", email);
+            HttpContext.Session.SetString("FoodSetId", acc.Id.ToString());
             return RedirectToAction("Index", "NutrientCalculator");
         }
         public IActionResult Register()
@@ -51,7 +51,7 @@ namespace NutritionApp.Controllers
         public IActionResult Register(string username, string email, string password, string password2)
         {
             Account acc;
-            acc = databaseContext.Accounts.Where(e => e.Email == email).First();
+            acc = databaseContext.Accounts.Where(e => e.Email == email).FirstOrDefault();
             if (acc!=null)
             {
                 ViewBag.error = "Account with this email address already exists!";
@@ -74,6 +74,11 @@ namespace NutritionApp.Controllers
             databaseContext.Add(new Account { Username = username, Email = email, Password = password });
             databaseContext.SaveChanges();
 
+            return RedirectToAction("Login", "Auth");
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.SetString("currentUser", "Null");
             return RedirectToAction("Login", "Auth");
         }
     }

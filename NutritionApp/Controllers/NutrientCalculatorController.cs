@@ -29,27 +29,39 @@ namespace NutritionApp.Controllers
                 .Include(fs => fs.FoodItems)
                 .FirstOrDefault();
 
-            string key = "PDhtf6KxCYiAEcqI7HZeO8Nb5Eg9FajCV3d6d21J";
-            string url = "https://api.nal.usda.gov/fdc/v1/foods?fdcIds=";
+            var joinTable = databaseContext.FoodItemSet_JOIN.Where(x=>x.FoodSetId== curSetId).ToList();
 
-            for(int i=0;i<foodSet.FoodItems.Count;i++)
+            if(foodSet!=null && foodSet.FoodItems.Count>0)
             {
-                url = url + foodSet.FoodItems[i].USDA_ID;
-                if (i < foodSet.FoodItems.Count - 1)
-                    url = url + ",";
-            }
-            url = url+ "&api_key=" + key;
-            HttpResponseMessage response = await httpClient.GetAsync(url);
-            string json = await response.Content.ReadAsStringAsync();
-            JArray jArray = JArray.Parse(json);
+                string key = "PDhtf6KxCYiAEcqI7HZeO8Nb5Eg9FajCV3d6d21J";
+                string url = "https://api.nal.usda.gov/fdc/v1/foods?fdcIds=";
 
-            List<Food> list = new List<Food>();
-            foreach(var jItem in jArray)
+                List<float> quantities = new List<float>();
+                for (int i = 0; i < foodSet.FoodItems.Count; i++)
+                {
+                    quantities.Add(joinTable.Find(x => x.FoodItemId == foodSet.FoodItems[i].Id).Quantity);
+                    url = url + foodSet.FoodItems[i].USDA_ID;
+                    if (i < foodSet.FoodItems.Count - 1)
+                        url = url + ",";
+                }
+                url = url + "&api_key=" + key;
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+                string json = await response.Content.ReadAsStringAsync();
+                JArray jArray = JArray.Parse(json);
+
+                List<Food> list = new List<Food>();
+                foreach (var jItem in jArray)
+                {
+                    list.Add(new Food(jItem.ToString(), "foods"));
+                }
+
+                return View(new NutrientCalculatorData() { Foods=list, Quantities=quantities });
+            }
+            else
             {
-                list.Add(new Food(jItem.ToString(), "foods"));
+                return View(new NutrientCalculatorData() { Foods=new List<Food>(), Quantities=new List<float>() });
             }
-
-            return View(list);
+            
         }
         [HttpPost]
         public async Task<ActionResult> Index(int foodId)
@@ -60,12 +72,11 @@ namespace NutritionApp.Controllers
             string json = await response.Content.ReadAsStringAsync();
 
             Food food = new Food(json);
-
-            var currUser = HttpContext.Session.GetString("currentUser");
             return View();
         }
         public IActionResult FindItem(int index = -1)
         {
+            ViewBag.FoodSetId = HttpContext.Session.GetString("FoodSetId");
             findItemDataStorage.selectedIndex = index;
             return View(new FindItemData(findItemDataStorage.selectedIndex, findItemDataStorage.foodList));
         }
@@ -87,7 +98,7 @@ namespace NutritionApp.Controllers
             }
 
             databaseContext.SaveChanges();
-            databaseContext.FoodItemSet_JOIN.Add(new FoodItemSet() { FoodItemId=foodItem.Id, FoodSetId=foodSetId });
+            databaseContext.FoodItemSet_JOIN.Add(new FoodItemSet() { FoodItemId=foodItem.Id, FoodSetId=foodSetId, Quantity=1 });
             databaseContext.SaveChanges();
 
             return RedirectToAction("Index", "NutrientCalculator");
@@ -111,8 +122,32 @@ namespace NutritionApp.Controllers
                     findItemDataStorage.foodList.Add(newFood);
             }
 
+            ViewBag.FoodSetId = HttpContext.Session.GetString("FoodSetId");
             findItemDataStorage.selectedIndex = -1;
             return View(new FindItemData(findItemDataStorage.selectedIndex, findItemDataStorage.foodList));
+        }
+        public IActionResult Delete(int USDA_ID)
+        {
+            var foodItemId = databaseContext.FoodItems.Where(x => x.USDA_ID == USDA_ID).FirstOrDefault().Id;
+            int curSetId = Int32.Parse(HttpContext.Session.GetString("FoodSetId"));
+            var entityToDelete = databaseContext.FoodItemSet_JOIN.Find(foodItemId, curSetId);
+
+            databaseContext.FoodItemSet_JOIN.Remove(entityToDelete);
+            databaseContext.SaveChanges();
+
+            return RedirectToAction("Index", "NutrientCalculator");
+        }
+        [HttpPost]
+        public IActionResult UpdateQuantity(int USDA_ID, float newQuantity)
+        {
+            var foodItemId = databaseContext.FoodItems.Where(x => x.USDA_ID == USDA_ID).FirstOrDefault().Id;
+            int curSetId = Int32.Parse(HttpContext.Session.GetString("FoodSetId"));
+            var entityToUpdate = databaseContext.FoodItemSet_JOIN.Find(foodItemId, curSetId);
+
+            entityToUpdate.Quantity = newQuantity;
+            databaseContext.SaveChanges();
+
+            return RedirectToAction("Index", "NutrientCalculator");
         }
     }
 }

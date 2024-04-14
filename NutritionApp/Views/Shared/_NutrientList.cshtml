@@ -19,12 +19,12 @@
                     bool unitnameFound = false;
 
                     float value = 0;
-                    foreach (var food in Model.Foods)
+                    for(int i=0;i<Model.Foods.Count;i++)
                     {
-                        FoodNutrient nutrient = food.Nutrients.Find(x => x.NutrientId == item.NutrientId);
+                        FoodNutrient nutrient = Model.Foods[i].Nutrients.Find(x => x.NutrientId == item.NutrientId);
                         if (nutrient != null)
                         {
-                            value = value + nutrient.Value;
+                            value = value + nutrient.Value * Model.Quantities[i];
                             if (!unitnameFound)
                             {
                                 unitname = nutrient.OGUnitName;

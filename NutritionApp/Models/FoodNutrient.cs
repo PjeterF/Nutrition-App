@@ -21,6 +21,9 @@ namespace NutritionApp.Models
                         this.NutrientId = (int)jobj["nutrientId"];
                         this.Name = (string)jobj["nutrientName"];
 
+                        if (this.NutrientId == 2047)
+                            this.NutrientId = 1008;
+
                         switch ((string)jobj["unitName"])
                         {
                             case "G":
@@ -59,6 +62,9 @@ namespace NutritionApp.Models
                         this.NutrientId = (int)jobj["nutrient"]["id"];
                         this.Name = (string)jobj["nutrient"]["name"];
 
+                        if (this.NutrientId == 2047)
+                            this.NutrientId = 1008;
+
                         switch ((string)jobj["nutrient"]["unitName"])
                         {
                             case "g":
@@ -86,6 +92,14 @@ namespace NutritionApp.Models
                                 this.OGUnitName = "µg";
                                 break;
                             case "kcal":
+                                if (jobj.GetValue("amount") != null)
+                                    this.Value = (float)jobj["amount"];
+                                else
+                                    this.Value = 0;
+                                this.UnitName = "kcal";
+                                this.OGUnitName = "kcal";
+                                break;
+                            case "KCAL":
                                 if (jobj.GetValue("amount") != null)
                                     this.Value = (float)jobj["amount"];
                                 else
