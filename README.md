@@ -3,6 +3,11 @@ The application enables users to track the nutrient content of various food item
 ## Website link
 https://nutritionapp20240415093752.azurewebsites.net
 ## Features
-- Searching the USDA database
-- Creating a meal plan
-- Viewing nutritional content of foods
+- **USDA database integration:** Searching for foods in the USDA food database
+- **Food logging:** Adding foods to a collection
+- **Nutrient tracking:** Displaying the nutrient content of a collection
+## Technologies used
+- ASP.NET
+- HTML/CSS
+- Azure database
+- Bootstrap
