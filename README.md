@@ -5,4 +5,4 @@ https://nutritionapp20240415093752.azurewebsites.net
 ## Features
 - Searching the USDA database
 - Creating a meal plan
-- Viewing the nutritional content of foods
+- Viewing nutritional content of foods
