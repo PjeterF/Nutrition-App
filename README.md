@@ -11,3 +11,5 @@ https://nutritionapp20240415093752.azurewebsites.net
 - HTML/CSS
 - Azure database
 - Bootstrap
+## Showcase
+![showcase](NutrientAppShowcase.png)
