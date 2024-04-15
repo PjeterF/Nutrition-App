@@ -123,11 +123,11 @@
                 {
                     if (i == Model.selectedIndex)
                     {
-                        <a asp-controller="NutrientCalculator" asp-action="FindItem" asp-route-index=@i class="list-group-item list-group-item-light list-group-item-action active">@(Model.foodList[i].Name)</a>
+                        <a asp-controller="NutrientCalculator" asp-action="FindItem" asp-route-index=@i class="list-group-item list-group-item-light list-group-item-action active">@(Model.foodList[i].Name) 100g</a>
                     }
                     else
                     {
-                        <a asp-controller="NutrientCalculator" asp-action="FindItem" asp-route-index=@i class="list-group-item list-group-item-light list-group-item-action">@(Model.foodList[i].Name)</a>
+                        <a asp-controller="NutrientCalculator" asp-action="FindItem" asp-route-index=@i class="list-group-item list-group-item-light list-group-item-action">@(Model.foodList[i].Name) 100g</a>
                     }
                 }
             </div>

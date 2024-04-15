@@ -35,7 +35,7 @@
                 @for (int i = 0; i < Model.Foods.Count; i++)
                 {
                     <tr>
-                        <td>@Model.Foods[i].Name</td>
+                        <td>@Model.Foods[i].Name 100g</td>
                         <td>
                             <form id="@i" method="post" asp-controller="NutrientCalculator" asp-action="UpdateQuantity">
                                 <input name="newQuantity" type="number" value=@Model.Quantities[i] onblur='submitChange("@i")'>
