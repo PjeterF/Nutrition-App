@@ -1,1 +1,1 @@
-This application allows for tracking the nutrient composition of a set of food items. It allows for searching the USDA food database and adding food items to a collection. Nutrients of food items in a collection are aggregated and displayed to provide nutritional information.
+The application enables users to track the nutrient content of various food items. It allows for searching the USDA food database and lets users to add food items to a collection. The app aggregates the nutrients from these items and displays nutritional information to help users monitor their intake.
