@@ -3,3 +3,6 @@ The application enables users to track the nutrient content of various food item
 ## Website link
 https://nutritionapp20240415093752.azurewebsites.net
 ## Features
+- Searching the USDA database
+- Creating a meal plan
+- Viewing the nutritional content of foods
