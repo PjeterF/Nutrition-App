@@ -7,7 +7,6 @@ The application enables users to track the nutrient content of various food item
 ## Technologies used
 - ASP.NET
 - HTML/CSS
-- Azure database
 - Bootstrap
 ## Showcase
 ![showcase](NutrientAppShowcase.png)
