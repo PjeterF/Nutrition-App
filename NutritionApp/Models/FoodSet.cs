@@ -3,6 +3,6 @@
     public class FoodSet
     {
         public int Id { get; set; }
-        public List<FoodItem> FoodItems { get; }
+        public List<FoodItem> FoodItems { get; set; }
     }
 }

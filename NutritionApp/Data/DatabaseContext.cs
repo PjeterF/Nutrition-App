@@ -18,6 +18,9 @@ namespace NutritionApp.Data
                 new Account { Id = 1, Email = "DEMO@demo.com", Username = "DEMO_User", Password = "DEMO" }
                 );
 
+            modelBuilder.Entity<FoodItemSet>()
+            .HasKey(e => new { e.FoodItemId, e.FoodSetId });
+
             modelBuilder.Entity<FoodSet>()
                 .HasMany(x => x.FoodItems)
                 .WithMany(x => x.FoodSets)
@@ -25,6 +28,7 @@ namespace NutritionApp.Data
 
             modelBuilder.Entity<FoodItemSet>()
                 .Property(x => x.Quantity)
+                .HasColumnName("Quantity")
                 .HasColumnType("real");
         }
 

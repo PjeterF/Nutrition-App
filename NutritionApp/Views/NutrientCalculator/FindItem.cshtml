@@ -13,6 +13,9 @@
             submitButton.disabled = true;
         }
     }
+    function onAdd(){
+        document.getElementById("addButton").disabled = true;
+    }
 </script>
 
 <style>
@@ -107,7 +110,7 @@
     <div class="container-fluid bg-light border border-3 rounded-3 mb-3">
         @if (Model.selectedIndex == -1)
         {
-            <button class="mt-1 form-control btn btn-primary mb-3" type="submit" disabled>Add selected item to collection</button>
+            <button id="addButton" onclick='onAdd' class="mt-1 form-control btn btn-primary mb-3" type="submit" disabled>Add selected item to collection</button>
         }
         else
         {

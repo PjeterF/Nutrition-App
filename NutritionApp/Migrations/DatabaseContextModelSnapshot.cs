@@ -80,7 +80,8 @@ namespace NutritionApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<float>("Quantity")
-                        .HasColumnType("real");
+                        .HasColumnType("real")
+                        .HasColumnName("Quantity");
 
                     b.HasKey("FoodItemId", "FoodSetId");
 
@@ -104,17 +105,21 @@ namespace NutritionApp.Migrations
 
             modelBuilder.Entity("NutritionApp.Models.FoodItemSet", b =>
                 {
-                    b.HasOne("NutritionApp.Models.FoodItem", null)
+                    b.HasOne("NutritionApp.Models.FoodItem", "FoodItem")
                         .WithMany()
                         .HasForeignKey("FoodItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NutritionApp.Models.FoodSet", null)
+                    b.HasOne("NutritionApp.Models.FoodSet", "FoodSet")
                         .WithMany()
                         .HasForeignKey("FoodSetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FoodItem");
+
+                    b.Navigation("FoodSet");
                 });
 #pragma warning restore 612, 618
         }

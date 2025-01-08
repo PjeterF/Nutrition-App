@@ -46,8 +46,7 @@ namespace NutritionApp.Controllers
                 }
                 url = url + "&api_key=" + key;
                 HttpResponseMessage response = await httpClient.GetAsync(url);
-                string json = await response.Content.ReadAsStringAsync();
-                JArray jArray = JArray.Parse(json);
+                JArray jArray = JArray.Parse(await response.Content.ReadAsStringAsync());
 
                 List<Food> list = new List<Food>();
                 foreach (var jItem in jArray)

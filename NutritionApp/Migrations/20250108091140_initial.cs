@@ -4,7 +4,7 @@
 
 namespace NutritionApp.Migrations
 {
-    public partial class q1 : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,8 @@ namespace NutritionApp.Migrations
                 columns: table => new
                 {
                     FoodItemId = table.Column<int>(type: "int", nullable: false),
-                    FoodSetId = table.Column<int>(type: "int", nullable: false)
+                    FoodSetId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
