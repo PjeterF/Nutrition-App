@@ -1,44 +1,78 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using NutritionApp.Data;
 using NutritionApp.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace NutritionApp.Controllers
 {
     public class AuthController : Controller
     {
         DatabaseContext databaseContext;
-        public AuthController(DatabaseContext databaseContext)
+        IConfiguration configuration;
+
+        private List<Claim> GenerateClaims(Account account)
         {
-            this.databaseContext = databaseContext;
+            var claims = new List<Claim>();
+
+            claims.Add(new Claim("Username", account.Username));
+
+            return claims;
         }
+        private string GenerateToken(Account account)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: configuration["Jwt:Issuer"],
+                audience: configuration["Jwt:Audience"],
+                claims: GenerateClaims(account),
+                expires: DateTime.Now.AddMinutes(60),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         public IActionResult Login()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(Login? login)
         {
-            ViewBag.error = "Incorrect credentials";
-            if (email==null || password==null)
+            if (login == null)
             {
-                ViewBag.error = "Incorrect credentials!";
+                ViewBag.error = "Incorrect creadentials";
                 return View();
             }
 
-            Account acc = databaseContext.Accounts.Where(e=>e.Email==email).FirstOrDefault();
+            if (login.Username==null || login.Password==null)
+            {
+                ViewBag.error = "All fields must be filled";
+                return View();
+            }
+
+            Account? acc = databaseContext.Accounts.Where(e=>e.Username==login.Username).FirstOrDefault();
             if(acc==null)
             {
                 ViewBag.error = "Incorrect credentials!";
                 return View();
             }
             
-            if(acc.Password!=password)
+            if(acc.Password!=login.Password)
             {
                 ViewBag.error = "Incorrect credentials";
-                return RedirectToAction("Login", "Auth");
+                return View();
             }
 
-            HttpContext.Session.SetString("currentUser", email);
+
+            string token = GenerateToken(acc);
+
+            HttpContext.Session.SetString("currentUser", login.Username);
             HttpContext.Session.SetString("FoodSetId", acc.Id.ToString());
             return RedirectToAction("Index", "NutrientCalculator");
         }
@@ -48,37 +82,41 @@ namespace NutritionApp.Controllers
             return View(message);
         }
         [HttpPost]
-        public IActionResult Register(string username, string email, string password, string password2)
+        public IActionResult Register(Register? register)
         {
-            Account acc;
-            acc = databaseContext.Accounts.Where(e => e.Email == email).FirstOrDefault();
-            if (acc!=null)
+            if(register == null)
             {
-                ViewBag.error = "Account with this email address already exists!";
+                ViewBag.error = "All fields must be filled";
                 return View();
             }
 
-            acc = databaseContext.Accounts.Where(n => n.Username == username).FirstOrDefault();
+            if(register.Username==null || register.Password == null || register.Password2 == null)
+            {
+                ViewBag.error = "All fields must be filled";
+                return View();
+            }
+
+            if (register.Password != register.Password2)
+            {
+                ViewBag.error = "Password do not match";
+                return View();
+            }
+
+            Account? acc = databaseContext.Accounts.Where(e => e.Username == register.Username).FirstOrDefault();
             if(acc!=null)
             {
                 ViewBag.error = "Account with this username already exists!";
                 return View();
             }
 
-            if(password!=password2)
-            {
-                ViewBag.error = "Password do not match";
-                return View();
-            }
-
-            databaseContext.Add(new Account { Username = username, Email = email, Password = password });
+            databaseContext.Add(new Account { Username = register.Username, Password = register.Password });
             databaseContext.SaveChanges();
 
             return RedirectToAction("Login", "Auth");
         }
         public IActionResult Logout()
         {
-            HttpContext.Session.SetString("currentUser", "Null");
+            HttpContext.Session.SetString("username", "Null");
             return RedirectToAction("Login", "Auth");
         }
     }

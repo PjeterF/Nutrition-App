@@ -29,19 +29,18 @@ namespace NutritionApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Accounts");
 
@@ -49,9 +48,8 @@ namespace NutritionApp.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "DEMO@demo.com",
                             Password = "DEMO",
-                            Username = "DEMO_User"
+                            Username = "DEMO_USER"
                         });
                 });
 

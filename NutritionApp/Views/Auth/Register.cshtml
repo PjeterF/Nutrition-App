@@ -19,10 +19,9 @@
         </div>
         <div>
             <form class="m-3" asp-controller="Auth" asp-action="Register">
-                <input name="username" class="form-control mb-3" type="text" placeholder="Username" required/>
-                <input name="email" class="form-control mb-3" type="email" placeholder="E-mail address" required/>
-                <input name="password" class="form-control mb-3" type="password" placeholder="Password" required />
-                <input name="password2" class="form-control mb-3" type="password" placeholder="Re-enter password" required />
+                <input name="Username" class="form-control mb-3" type="text" placeholder="Entier username" required/>
+                <input name="Password" class="form-control mb-3" type="password" placeholder="Enter password" required />
+                <input name="Password2" class="form-control mb-3" type="password" placeholder="Re-enter password" required />
                 <div class="d-flex justify-content-between">
                     <input class="btn btn-primary" type="submit" value="Register" />
                     <div class="text-warning">@ViewBag.error</div>

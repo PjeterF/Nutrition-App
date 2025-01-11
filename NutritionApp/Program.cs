@@ -1,5 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using NutritionApp.Data;
+using System.Text;
+using NutritionApp.Utility;
+using NutritionApp.Models;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +14,23 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DatabaseContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<AccountJwtTokenUtility>();
+
 builder.Services.AddSingleton<FindItemDataStorage>();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    TokenValidationParameters prms = new()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+    options.TokenValidationParameters = prms;
+
+});
 
 builder.Services.AddSession(options =>
 {
@@ -30,6 +51,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
+
+app.MapGet("/test", () =>
+{
+    Login login = new() { Password = "password" , Username="username"};
+
+    return JsonSerializer.Serialize(login);
+});
 
 app.UseRouting();
 

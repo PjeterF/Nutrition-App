@@ -15,8 +15,8 @@
 <script>
     function setDemoValues()
     {
-        document.getElementById("EmailInput").value = "DEMO@demo.com";
-        document.getElementById("PasswordInput").value = "DEMO";
+        document.getElementById("EmailInput").value = "DEMO_USER";
+        document.getElementById("passwordInput").value = "DEMO";
     }
 </script>
 
@@ -28,14 +28,13 @@
         </div>
         <div>
             <form class="m-3" asp-controller="Auth" asp-action="Login">
-                <input name="email" class="form-control mb-3" type="email" id="EmailInput" placeholder="Email" required />
-                <input name="password" class="form-control mb-3" type="password" id="PasswordInput" placeholder="Password" required />
+                <input name="Username" class="form-control mb-3" type="text" id="usernameInput" placeholder="Enter username" required />
+                <input name="Password" class="form-control mb-3" type="password" id="passwordInput" placeholder="Enter password" required />
                 <div class="d-flex justify-content-between">
                     <input class="btn btn-primary" type="submit" value="Login" />
                     <div class="text-warning">@ViewBag.error</div>
                     <input onclick="setDemoValues()" class="btn btn-danger" type="submit" id="DEMO_button" value="DEMO User" />
                 </div>
-                
             </form>
             <p class="text-white m-3">Don't have an account yet? <a asp-controller="Auth" asp-action="Register" class="text-danger">Sign Up</a></p>
         </div>

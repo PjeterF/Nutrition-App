@@ -14,8 +14,7 @@ namespace NutritionApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -75,8 +74,14 @@ namespace NutritionApp.Migrations
 
             migrationBuilder.InsertData(
                 table: "Accounts",
-                columns: new[] { "Id", "Email", "Password", "Username" },
-                values: new object[] { 1, "DEMO@demo.com", "DEMO", "DEMO_User" });
+                columns: new[] { "Id", "Password", "Username" },
+                values: new object[] { 1, "DEMO", "DEMO_USER" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_Username",
+                table: "Accounts",
+                column: "Username",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FoodItemSet_JOIN_FoodSetId",

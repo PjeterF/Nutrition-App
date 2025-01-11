@@ -15,8 +15,10 @@ namespace NutritionApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>().HasData(
-                new Account { Id = 1, Email = "DEMO@demo.com", Username = "DEMO_User", Password = "DEMO" }
+                new Account { Id = 1, Username = "DEMO_USER", Password = "DEMO" }
                 );
+
+            modelBuilder.Entity<Account>().HasIndex(x => x.Username);
 
             modelBuilder.Entity<FoodItemSet>()
             .HasKey(e => new { e.FoodItemId, e.FoodSetId });
